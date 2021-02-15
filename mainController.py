@@ -30,6 +30,7 @@ class Controller:
         self.mainWin.close()
         
         #WebCamWindow defined in webcamUI.py
+        
         self.checkerUI = WebCamWindow(csvName, vidSource)
         
         #called from webcamWindow.addLog()

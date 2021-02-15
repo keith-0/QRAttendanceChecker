@@ -4,6 +4,10 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from webcamUI import *
 import sys, logging
 
+#MainWindow is the first QWidget called by MainController
+#MainWindow initializes the program by getting the video capture source
+#index and eventname
+
 class MainWindow(QWidget):
     #triggered when name dialogbox is submitted
     #contains video capture device index and event name
@@ -19,8 +23,14 @@ class MainWindow(QWidget):
 		self.setWindowTitle(self.title)
 		self.setGeometry(self.winX, self.winY, self.winW, self.winH)
 		self.dropdown = QComboBox()
+		self.dropdown.setGeometry(75, 0, 50, 20)
 		self.eventNameInp = QLineEdit()
 		self. mainWindowLayout = QVBoxLayout()
+		self.button1 = QPushButton("Open New Event")
+		self.button1.setFixedSize(200, 25)
+		#Connects/returns mainWindow to mainController
+		#mainController calls EventAttendanceCheck here
+		self.button1.clicked.connect(self.emitEventInitiate)
 		logging.info("Populating setup dialogbox\n")
 		self.populate()
 
@@ -29,6 +39,7 @@ class MainWindow(QWidget):
     # they are returned as index numbers starting at
     # 0 for default laptop webcam and 1, 2, 3 ... fr auxillary cameras
     # TODO: find method to retrieve hardware descriptions for cameras
+    # TODO: catch if there is no available video capture device
 	def getVideoSources(self):
 		arr = []
 		# loops through valid video capture sources
@@ -46,16 +57,14 @@ class MainWindow(QWidget):
 
 	# emitted when button1 is clicked; connects to mainController.EventAttendanceCheck()
 	def emitEventInitiate(self):
-		vid_source = self.dropdown.currentText()
+		vid_source = self.dropdown.currentText() 
 		name = self.eventNameInp.text()
 		self.eventSignal.emit(name, vid_source)
 	
 	def populate(self):
-		logging.info("Adding pushbutton\n")
-		button1 = QPushButton("Open New Event")
-		button1.setFixedSize(200, 25)
-		button1.clicked.connect(self.emitEventInitiate)
-		self.dropdown.setGeometry(75, 0, 50, 20)
+
+
+		
 		logging.info("Scanning for list of video capture devices\n")
 		src = self.getVideoSources()
 		self.dropdown.addItems(src)
@@ -63,9 +72,9 @@ class MainWindow(QWidget):
 		logging.info("Adding widgets to mainwindow\n")
 		self.mainWindowLayout.addWidget(self.dropdown)
 		self.mainWindowLayout.addWidget(self.eventNameInp)
-		self.mainWindowLayout.addWidget(button1)
+		self.mainWindowLayout.addWidget(self.button1)
 		self.setLayout(self.mainWindowLayout)
-		print("enr po")
+		logging.info("Launching MainWindow\n")
 
 
 if __name__ == "__main__":

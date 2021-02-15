@@ -23,9 +23,12 @@ class WebCamWindow(QWidget):
 	#Triggered when enter is pressed with entry on inputbox (i.e. manual input)
     enterKeypress = pyqtSignal(str, int)
     #TODO: Allow changing video source mid-stream
-    sourceChangeSignal = pyqtSignal(int)
-	
+    #Currently unused
+    #sourceChangeSignal = pyqtSignal(int)
+    
+	#Signal called by addLog()
     QRDetectedSignal = pyqtSignal(str, int)
+    
     def __init__(self, instanceName, videoSource):
         super().__init__()
         self.enterKeypress.connect(self.addLog)
@@ -35,7 +38,7 @@ class WebCamWindow(QWidget):
         self.csvTitle = instanceName
     # initialize file directories
         self.initFileDir("./records")
-    # declare mainWidget
+    # declare mainQWidget for WebCamWindow
         self.mainWidget = QWidget()
         print("mainWidget Initialized")
         self.mainWidgetLayout = QHBoxLayout()
@@ -72,6 +75,7 @@ class WebCamWindow(QWidget):
         self.dataInput.setFont(font)
         font.setPointSize(15)
         self.logWindow.setFont(font)
+        
         self.dataInputButton.setFixedSize(50,50)
         self.dataInputButton.clicked.connect(self.inputButtonClicked)
         logWindowLabel = QLabel()
@@ -99,8 +103,8 @@ class WebCamWindow(QWidget):
             self.dataInput.selectAll()
             self.dataInput.setFocus()
 
+	#Connected do enterKeypress and decodedDataSignal
     def addLog(self, data, mode):
-        # cursor = 
         self.QRDetectedSignal.emit(data, mode) # sends pysignal to mainController
         self.logWindow.moveCursor(QtGui.QTextCursor.Start)
         self.logWindow.insertHtml(time.strftime("[%H:%M:%S]\t")+data + "<br>")
