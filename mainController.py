@@ -56,7 +56,7 @@ class Controller:
 def main():
     print("enter main")
     appl = QApplication(sys.argv)
-    controller = Controller()cd 
+    controller = Controller()
     print("assigned aontroller")
     controller.showMainWindow()
     print("Main exited")

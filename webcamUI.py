@@ -35,9 +35,6 @@ class WebCamWindow(QWidget):
     # video source selected in mainWindow
         self.videoSource = videoSource
         self.setWindowTitle(instanceName)
-        self.csvTitle = instanceName
-    # initialize file directories
-        self.initFileDir("./records")
     # declare mainQWidget for WebCamWindow
         self.mainWidget = QWidget()
         print("mainWidget Initialized")
@@ -45,7 +42,7 @@ class WebCamWindow(QWidget):
     # initialize clock widget
         self.timeWidget = ClockWidget()
     # configure stream output widget
-        self.webCamScreen = WebcamWidget(videoSource, self.csvTitle)
+        self.webCamScreen = WebcamWidget(videoSource, instanceName)
         self.webCamScreen.decodedDataSignal.connect(self.addLog)
         self.webCamScreen.show()
     # configure left half of main widget (clock and webcamstream)
@@ -117,12 +114,7 @@ class WebCamWindow(QWidget):
         self.streamInterface.setLayout(confStreamInterface)
         self.streamInterface.setFixedSize(QSize(600,500))
         self.streamInterface.setGeometry(0, 0, 250, 500)
-        		
-    def initFileDir(self, root):
-        self.baseDir = root
-        if not path.isdir(self.baseDir):
-            mkdir(self.baseDir)
-        self.fullDir = self.baseDir+"/"+self.csvTitle+".csv"
+
 
 
 class RefreshFrameThread(QThread):

@@ -52,19 +52,14 @@ class MainWindow(QWidget):
 			else:
 				arr.append(str(x))
 			cap.release()
-		print("endonig add")
 		return arr
 
 	# emitted when button1 is clicked; connects to mainController.EventAttendanceCheck()
 	def emitEventInitiate(self):
-		vid_source = self.dropdown.currentText() 
-		name = self.eventNameInp.text()
-		self.eventSignal.emit(name, vid_source)
+		self.eventSignal.emit(self.eventNameInp.text(), self.dropdown.currentText())
 	
 	def populate(self):
 
-
-		
 		logging.info("Scanning for list of video capture devices\n")
 		src = self.getVideoSources()
 		self.dropdown.addItems(src)
